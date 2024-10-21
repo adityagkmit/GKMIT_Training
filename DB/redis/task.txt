@@ -1,0 +1,72 @@
+# TASK 1: Leaderboard
+
+# 1. To add data in the Leaderboard
+ZADD leaderboard 200 "Sophia"      # Add Sophia with a score of 200
+ZADD leaderboard 100 "Liam"        # Add Liam with a score of 100
+ZADD leaderboard 300 "Noah"        # Add Noah with a score of 300
+ZADD leaderboard 500 "Ava"         # Add Ava with a score of 500
+
+# 2. To display the Leaderboard (sorted by highest score)
+ZREVRANGE leaderboard 0 -1 WITHSCORES  # Retrieve all players and their scores
+
+# 3. To increment the score of a player
+ZINCRBY leaderboard 600 "Sophia"   # Increment Sophia's score by 600
+
+# 4. To return the rank of a particular player
+ZREVRANK leaderboard "Liam"         # Get Liam's rank in the leaderboard
+
+# 5. To remove a player from the Leaderboard
+ZREM leaderboard "Liam"             # Remove Liam from the leaderboard
+
+# 6. To show the score of a player
+ZSCORE leaderboard "Noah"            # Get Noah's score
+
+# 7. To show the top 3 players of the leaderboard
+ZREVRANGE leaderboard 0 2 WITHSCORES  # Retrieve the top 3 players and their scores
+
+# 8. To show the count of players within a score range
+ZCOUNT leaderboard 250 600          # Count players with scores between 250 and 600
+
+
+# Leaderboard Representation in JSON format
+[
+    {"leaderboard:player:add": {"score": "200", "name": "Sophia"}},
+    {"leaderboard:display": [{"score": "600", "name": "Sophia"}, {"score": "300", "name": "Noah"}, {"score": "100", "name": "Liam"}, {"score": "500", "name": "Ava"}]},
+    {"leaderboard:<player_id>:score:increment": {"score": "800", "name": "Sophia"}},
+    {"leaderboard:<player_id>:rank": "2"},
+    {"leaderboard:<player_id>:remove": {"name": "Liam", "score": "100"}},
+    {"leaderboard:<player_id>:show:score": "300"},
+    {"leaderboard:show:players:limit": [{"score": "600", "name": "Sophia"}, {"score": "300", "name": "Noah"}, {"score": "500", "name": "Ava"}]},
+    {"leaderboard:players:count:range": [{"score": "600", "name": "Sophia"}, {"score": "300", "name": "Noah"}]}
+]
+
+
+# TASK 2: Geo Location
+
+# 1. Add geolocations for different cities
+GEOADD locations 13.361389 38.115556 "Jaipur"     # Add Jaipur with its latitude and longitude
+GEOADD locations 15.087269 37.502669 "Ahmedabad"  # Add Ahmedabad with its latitude and longitude
+GEOADD locations 12.496366 41.902783 "Delhi"      # Add Delhi with its latitude and longitude
+GEOADD locations 14.268124 40.835490 "Mumbai"     # Add Mumbai with its latitude and longitude
+
+# 2. Get the position of Delhi
+GEOPOS locations "Delhi"              # Retrieve the latitude and longitude of Delhi
+
+# 3. Calculate distance between Jaipur and Ahmedabad
+GEODIST locations "Jaipur" "Ahmedabad" km  # Calculate the distance between Jaipur and Ahmedabad in kilometers
+
+# 4. Find all locations within 250 km of Delhi
+GEORADIUS locations 12.496366 41.902783 250 km  # Retrieve all locations within 250 km of Delhi
+
+# 5. Hash the location for Udaipur
+GEOHASH "Udaipur"                     # Get the geohash for Udaipur
+
+
+# Geo Location Representation in JSON format
+[
+    {"location:add": {"latitude": "13.361389", "longitude": "38.115556", "name": "Jaipur"}},
+    {"location:<location_id>:position": {"latitude": "12.496366", "longitude": "41.902783"}},
+    {"location:<location1_id>:<location2_id>:distance": "166 km"},
+    {"location:<location_id>:allLocations": ["Ahmedabad", "Mumbai"]},
+    {"location:hash": {"name": "Udaipur"}}  # Hashing the location for Udaipur
+]
